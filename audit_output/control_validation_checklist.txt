@@ -1,0 +1,27 @@
+﻿CONTROL VALIDATION CHECKLIST
+Project: Week 4 Security Audit
+Purpose: Record checks performed in the simulated environment.
+
+CHECK-01: SQL Injection Protection
+Action: Review application source code for database query construction.
+Evidence to record: Relevant code excerpt and whether parameterized queries are used.
+Result: Pending manual review.
+
+CHECK-02: Administrative Access
+Action: Review documented administrator roles and MFA configuration.
+Evidence to record: Sanitized settings or access-control policy.
+Result: Pending manual review.
+
+CHECK-03: Database Exposure
+Action: Review database bind address and approved firewall rules.
+Evidence to record: Relevant configuration excerpts.
+Result: Pending configuration review.
+
+CHECK-04: Security Monitoring
+Action: Review whether relevant logs are collected and alerts are configured.
+Evidence to record: Sample log entries or monitoring configuration.
+Result: Pending configuration review.
+
+RULE:
+Do not mark a check as passed or failed until supporting evidence has been examined.
+Do not include passwords, tokens, personal information, or other secrets.
