@@ -1,0 +1,6 @@
+LOCAL SQL PARAMETERIZATION TEST
+Environment: Temporary in-memory SQLite database
+Test: Parameterized SQL query test
+Result: PASS
+Details: Test input was treated as data, not SQL code.
+Limitation: This tests a local parameterized query only; it does not verify the actual web application.

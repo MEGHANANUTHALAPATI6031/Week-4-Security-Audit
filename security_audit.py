@@ -3,6 +3,7 @@ from datetime import datetime
 import json
 import csv
 import os
+import sqlite3
 
 # Enterprise Security Audit - Educational Simulation
 AUDIT_DATE = datetime.now().strftime("%d-%m-%Y")
@@ -35,7 +36,36 @@ assets = [
         "status": "Needs verification"
     }
 ]
+def run_sql_injection_protection_test():
+    """Test parameterized SQL queries in a temporary database."""
+    connection = sqlite3.connect(":memory:")
+    cursor = connection.cursor()
 
+    cursor.execute("CREATE TABLE users (username TEXT, role TEXT)")
+    cursor.execute(
+        "INSERT INTO users VALUES (?, ?)",
+        ("demo_user", "voter")
+    )
+
+    test_input = "' OR '1'='1"
+
+    cursor.execute(
+        "SELECT username FROM users WHERE username = ?",
+        (test_input,)
+    )
+    result = cursor.fetchall()
+
+    connection.close()
+
+    return {
+        "test": "Parameterized SQL query test",
+        "result": "PASS" if len(result) == 0 else "FAIL",
+        "details": (
+            "Test input was treated as data, not SQL code."
+            if len(result) == 0
+            else "Unexpected result; review the query."
+        )
+    }
 findings = [
     {
         "id": "F-01",
@@ -210,3 +240,19 @@ print("Findings JSON:", json_path)
 print("Remediation CSV:", csv_path)
 print("\nAudit simulation completed.")
 print("Reminder: Validate each risk and attach real test evidence before submission.")
+sql_test_result = run_sql_injection_protection_test()
+sql_test_path = os.path.join(OUTPUT_DIR, "sql_parameterized_test.txt")
+
+with open(sql_test_path, "w", encoding="utf-8") as file:
+    file.write("LOCAL SQL PARAMETERIZATION TEST\n")
+    file.write("Environment: Temporary in-memory SQLite database\n")
+    file.write(f"Test: {sql_test_result['test']}\n")
+    file.write(f"Result: {sql_test_result['result']}\n")
+    file.write(f"Details: {sql_test_result['details']}\n")
+    file.write(
+        "Limitation: This tests a local parameterized query only; "
+        "it does not verify the actual web application.\n"
+    )
+
+print("SQL parameterization test:", sql_test_result["result"])
+print("SQL test evidence:", sql_test_path)
